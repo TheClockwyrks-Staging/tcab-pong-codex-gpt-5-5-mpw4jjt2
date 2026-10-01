@@ -1,64 +1,47 @@
-# Carom — starter project
+# Carom
 
-This repository is the starting point for building **Carom**, the game the
-specification under `specs/` describes. Read `specs/overview.md` first; it says
-how the rest of the specification is organized.
+Carom is a top-down paddle duel for the browser. Two paddles trade ricochets across a dark 1280 x 720 field, banking the ball around fixed center obstacles. Moving a paddle at the moment of contact adds spin, so clean returns can bend into awkward curves and late match points can turn on a bank shot.
 
-This build runs on **no engine**. Nothing here supplies a frame loop, input,
-audio, asset loading, or an overlay, and there is no game code to start from.
-What the project supplies is the toolchain, already configured and installed:
-TypeScript, Vite, Vitest, ESLint and Prettier, wired to the commands below.
+The game is written in TypeScript with its own canvas runtime, physics loop, input handling, synthesized audio cues, AI opponent, local two-player mode, and `window.__carom` debug surface. It ships as static files and needs no backend or runtime assets.
 
-## What you own
+## Install
 
-**Everything under `src/`.** The directory does not exist yet; create it.
+```sh
+npm ci
+```
 
-`index.html` loads `/src/main.ts` as its entry point, so that module is where
-your build starts. Beyond that the structure is yours. You write the runtime a
-browser game needs — the frame loop and the delta time it measures, fitting the
-fixed logical field onto the canvas, keyboard input, audio, and the diagnostics
-overlay — and you write the game itself on top of it.
+## Development
 
-You also write the `window.__carom` debugging and automation API that
-`specs/instrumentation.md` specifies. It is a required deliverable: it is how the
-game is driven from code, so it is present and exactly as specified.
+```sh
+npm run dev
+```
 
-Every figure the specification fixes — geometry, speeds, spin, the match rules,
-the action names, the cue names — is stated in `specs/`, and the value stated
-there is authoritative.
+Vite serves the game locally with hot reload.
 
-Tests you write belong beside your sources as `src/**/*.test.ts`. `npm test` runs
-them in process, in Node, with coverage over `src/`. `@napi-rs/canvas` is
-installed, so a test that needs a real 2D context can draw through one without a
-browser.
+## Production Build
 
-## What you must not edit
+```sh
+npm run build
+```
 
-- **`index.html`** — the page and the canvas.
-- **The toolchain** — `package.json`, `tsconfig.json`, `vite.config.ts`,
-  `vitest.config.ts`, `eslint.config.js`, `.prettierrc.json`, `.prettierignore`,
-  and `.gitignore`.
+The complete static site is emitted to `dist/` with `dist/index.html` as its entry point.
 
-Add dependencies to `package.json` if you genuinely need them, and commit the
-`package-lock.json` — the build is installed with `npm ci`. Leave the existing
-entries and scripts alone.
+## Checks
 
-## Commands
+```sh
+npm run typecheck
+npm run lint
+npm run format
+npm test
+```
 
-- `npm run dev` — serves the game with hot reload.
-- `npm run build` — type-checks, then emits the static site into `dist/`.
-- `npm run preview` — serves `dist/` for a final check.
-- `npm run typecheck` — `tsc --noEmit`.
-- `npm run lint` — ESLint.
-- `npm run format` — Prettier, in check mode.
-- `npm test` — Vitest over `src/**/*.test.ts`, with coverage.
+## Controls
 
-## Before you finish
-
-- `npm run build` produces `dist/` with `index.html` at its root, and that
-  directory runs as-is on any static host.
-- `npm run typecheck`, `npm run lint`, `npm run format`, and `npm test` all pass.
-  The same four commands are run over the repository you leave behind.
-- **Replace this file** with the `README.md` `specs/overview.md` asks the
-  finished build to ship: what the game is, how to install it, how to run it in
-  development, how to produce the production build, and the controls.
+- Player one: `W` and `S`
+- Player two in Versus: `ArrowUp` and `ArrowDown`
+- Solo: either `W`/`S` or arrow keys move the left paddle
+- Confirm menu item: `Enter` or `Space`
+- Back or pause: `Escape`
+- Pause: `P`
+- Mute: `M`
+- Debug overlay: backquote
